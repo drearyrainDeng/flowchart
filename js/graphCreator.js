@@ -1525,6 +1525,9 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
   //生成所有activity xml添加至xmlContainer
   GraphCreator.prototype.emergeAllXmlContent = function() {
     var thisGraph = this;
+	
+	var edges = thisGraph.edges;
+	
     var start = '<WorkflowProcess Id="'+workflow_id+'" Name="'+workflow_name+'" endform-id="" endformschema="">',
           end = '  <text-limit/>'+
                 '</WorkflowProcess>';
@@ -1533,9 +1536,18 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
       activity = '';
     thisGraph.nodes.forEach(function(node) {
       if (node.type == 'activity') {
+		
+        var nodepaths = edges.filter(it=>it.source.id == node.id)
+        var condi ='<forward>';
+        nodepaths.forEach(function(node){
+          condi += '<switch case="'+node.edgeId+'">'+node.target.id+'</switch>'
+        });
+        condi +='</forward>'
+		  
         activity = '<activity Id="'+node.id+'" Name="'+node.title+'" form-id="" formdisplayschema="" hisformdisplayschema="">'+
                    '  <operations/>'+
                    '  <text-limit/>'+
+                   condi+
                    '</activity>';
         curText += activity;
       }
