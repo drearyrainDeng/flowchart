@@ -1539,8 +1539,9 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
 		
         var nodepaths = edges.filter(it=>it.source.id == node.id)
         var condi ='<forward>';
-        nodepaths.forEach(function(node){
-          condi += '<switch case="'+node.edgeId+'">'+node.target.id+'</switch>'
+        nodepaths.forEach(function(e){
+          var pc = 'edgeName' in e.postCondition ?e.postCondition.edgeName:'default'
+          condi += '<switch case="'+pc+'">'+e.target.id+'</switch>'
         });
         condi +='</forward>'
 		  
