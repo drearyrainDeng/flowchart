@@ -1526,8 +1526,6 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
   GraphCreator.prototype.emergeAllXmlContent = function() {
     var thisGraph = this;
 	
-	var edges = thisGraph.edges;
-	
     var start = '<WorkflowProcess Id="'+workflow_id+'" Name="'+workflow_name+'" endform-id="" endformschema="">',
           end = '  <text-limit/>'+
                 '</WorkflowProcess>';
@@ -1537,12 +1535,13 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     thisGraph.nodes.forEach(function(node) {
       if (node.type == 'activity') {
 		
-        var nodepaths = edges.filter(it=>it.source.id == node.id)
+        var nodepaths = thisGraph.edges.filter(it=>it.source.id == node.id)
         var condi ='<forward>';
         nodepaths.forEach(function(e){
           var pc = 'edgeName' in e.postCondition ?e.postCondition.edgeName:'default'
           condi += '<switch case="'+pc+'">'+e.target.id+'</switch>'
         });
+
         condi +='</forward>'
 		  
         activity = '<activity Id="'+node.id+'" Name="'+node.title+'" form-id="" formdisplayschema="" hisformdisplayschema="">'+
